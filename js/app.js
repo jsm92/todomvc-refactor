@@ -3,6 +3,8 @@ import Handlebars from 'handlebars'
 import { Router } from 'director/build/director'
 import axios from 'axios'
 import {getTodos} from '../api/getTodos'
+import {createTodo} from '../api/createTodo'
+
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
 	'use strict';
@@ -15,21 +17,6 @@ jQuery(function ($) {
 	var ESCAPE_KEY = 27;
 
 	var util = {
-		uuid: function () {
-			/*jshint bitwise:false */
-			var i, random;
-			var uuid = '';
-
-			for (i = 0; i < 32; i++) {
-				random = Math.random() * 16 | 0;
-				if (i === 8 || i === 12 || i === 16 || i === 20) {
-					uuid += '-';
-				}
-				uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
-			}
-
-			return uuid;
-		},
 		pluralize: function (count, word) {
 			return count === 1 ? word : word + 's';
 		},
@@ -140,20 +127,18 @@ jQuery(function ($) {
 		create: function (e) {
 			var $input = $(e.target);
 			var val = $input.val().trim();
+			
 
 			if (e.which !== ENTER_KEY || !val) {
 				return;
 			}
 
-			this.todos.push({
-				id: util.uuid(),
-				title: val,
-				completed: false
-			});
-
-			$input.val('');
-
-			this.render();
+			createTodo(val).then(
+				newTodo => this.todos.push(newTodo))
+				.then(() => {
+				$input.val('')
+				this.render()
+			})
 		},
 		toggle: function (e) {
 			var i = this.indexFromEl(e.target);
