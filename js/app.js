@@ -33,35 +33,26 @@ jQuery(function ($) {
 		pluralize: function (count, word) {
 			return count === 1 ? word : word + 's';
 		},
-		// store: function (namespace, data) {
-		// 	if (arguments.length > 1) {
-		// 		return localStorage.setItem(namespace, JSON.stringify(data));
-		// 	} else {
-		// 		var store = localStorage.getItem(namespace);
-		// 		return (store && JSON.parse(store)) || [];
-		// 	}
-		// }
-		// getTodos: function () {
-		// 	return axios.get('http://localhost:3000/todos'); 
-		// }
+		
 	};
 
 	var App = {
 		init: function () {
+			this.todos = [];
+			this.todoTemplate = Handlebars.compile($('#todo-template').html());
+			this.footerTemplate = Handlebars.compile($('#footer-template').html());
+			this.bindEvents();
+			new Router({
+			  '/:filter': function (filter) {
+				this.filter = filter;
+				this.render();
+			  }.bind(this)
+			}).init('/all');
 			
 			// this.todos = util.store('todos-jquery');
 			getTodos().then(res => {
 				this.todos = res.data;
-				console.log(this.todos);
-				this.todoTemplate = Handlebars.compile($('#todo-template').html());
-				this.footerTemplate = Handlebars.compile($('#footer-template').html());
-				this.bindEvents();
-				new Router({
-				'/:filter': function (filter) {
-					this.filter = filter;
-					this.render();
-				}.bind(this)
-			}).init('/all');
+				this.render();
 			})
 
 			
