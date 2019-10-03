@@ -160,12 +160,10 @@ jQuery(function ($) {
 			this.render();
 		},
 		edit: function (e) {
-			console.log('edit');
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
 			$input.val($input.val()).focus();
 		},
 		editKeyup: function (e) {
-			console.log('editKeyup');
 			if (e.which === ENTER_KEY) {
 				e.target.blur();
 			}
@@ -175,7 +173,6 @@ jQuery(function ($) {
 			}
 		},
 		update: function (e) {
-			console.log('update');
 			var el = e.target;
 			var $el = $(el);
 			var val = $el.val().trim();
