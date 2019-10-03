@@ -3,12 +3,9 @@ import Handlebars from 'handlebars'
 import { Router } from 'director/build/director'
 import axios from 'axios'
 import {getTodos} from '../api/getTodos'
-<<<<<<< HEAD
 import {createTodo} from '../api/createTodo'
 
-=======
 import {deleteTodo} from '../api/deleteTodo'
->>>>>>> exercises
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
 	'use strict';
