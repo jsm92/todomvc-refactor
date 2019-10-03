@@ -6,14 +6,17 @@
     "compile": "tsc",
     "start": "webpack-dev-server",
     "build": "webpack",
-    "hs": "hs"
+    "hs": "hs",
+    "parcel": "parcel index.html"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "director": "~1.2.2",
-    "jquery": "~2.1.1",
     "handlebars": "~2.0.0",
-    "todomvc-common": "~1.0.1",
-    "todomvc-app-css": "~1.0.1"
+    "jquery": "~2.1.1",
+    "parcel": "^1.12.3",
+    "todomvc-app-css": "~1.0.1",
+    "todomvc-common": "~1.0.1"
   },
   "devDependencies": {
     "file-loader": "=1.1.9",

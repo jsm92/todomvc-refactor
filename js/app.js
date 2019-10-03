@@ -1,3 +1,8 @@
+import jQuery from 'jquery'
+import Handlebars from 'handlebars'
+import { Router } from 'director/build/director'
+import axios from 'axios'
+import {getTodos} from '../api/getTodos'
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
 	'use strict';
@@ -28,29 +33,38 @@ jQuery(function ($) {
 		pluralize: function (count, word) {
 			return count === 1 ? word : word + 's';
 		},
-		store: function (namespace, data) {
-			if (arguments.length > 1) {
-				return localStorage.setItem(namespace, JSON.stringify(data));
-			} else {
-				var store = localStorage.getItem(namespace);
-				return (store && JSON.parse(store)) || [];
-			}
-		}
+		// store: function (namespace, data) {
+		// 	if (arguments.length > 1) {
+		// 		return localStorage.setItem(namespace, JSON.stringify(data));
+		// 	} else {
+		// 		var store = localStorage.getItem(namespace);
+		// 		return (store && JSON.parse(store)) || [];
+		// 	}
+		// }
+		// getTodos: function () {
+		// 	return axios.get('http://localhost:3000/todos'); 
+		// }
 	};
 
 	var App = {
 		init: function () {
-			this.todos = util.store('todos-jquery');
-			this.todoTemplate = Handlebars.compile($('#todo-template').html());
-			this.footerTemplate = Handlebars.compile($('#footer-template').html());
-			this.bindEvents();
-
-			new Router({
+			
+			// this.todos = util.store('todos-jquery');
+			getTodos().then(res => {
+				this.todos = res.data;
+				console.log(this.todos);
+				this.todoTemplate = Handlebars.compile($('#todo-template').html());
+				this.footerTemplate = Handlebars.compile($('#footer-template').html());
+				this.bindEvents();
+				new Router({
 				'/:filter': function (filter) {
 					this.filter = filter;
 					this.render();
 				}.bind(this)
 			}).init('/all');
+			})
+
+			
 		},
 		bindEvents: function () {
 			$('#new-todo').on('keyup', this.create.bind(this));
@@ -70,7 +84,7 @@ jQuery(function ($) {
 			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
 			this.renderFooter();
 			$('#new-todo').focus();
-			util.store('todos-jquery', this.todos);
+			// util.store('todos-jquery', this.todos);
 		},
 		renderFooter: function () {
 			var todoCount = this.todos.length;
