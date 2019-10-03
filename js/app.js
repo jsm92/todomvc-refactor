@@ -3,6 +3,7 @@ import Handlebars from 'handlebars'
 import { Router } from 'director/build/director'
 import axios from 'axios'
 import {getTodos} from '../api/getTodos'
+import {deleteTodo} from '../api/deleteTodo'
 /*global jQuery, Handlebars, Router */
 jQuery(function ($) {
 	'use strict';
@@ -49,7 +50,6 @@ jQuery(function ($) {
 			  }.bind(this)
 			}).init('/all');
 			
-			// this.todos = util.store('todos-jquery');
 			getTodos().then(res => {
 				this.todos = res.data;
 				this.render();
@@ -75,7 +75,6 @@ jQuery(function ($) {
 			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
 			this.renderFooter();
 			$('#new-todo').focus();
-			// util.store('todos-jquery', this.todos);
 		},
 		renderFooter: function () {
 			var todoCount = this.todos.length;
@@ -161,10 +160,12 @@ jQuery(function ($) {
 			this.render();
 		},
 		edit: function (e) {
+			console.log('edit');
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
 			$input.val($input.val()).focus();
 		},
 		editKeyup: function (e) {
+			console.log('editKeyup');
 			if (e.which === ENTER_KEY) {
 				e.target.blur();
 			}
@@ -174,6 +175,7 @@ jQuery(function ($) {
 			}
 		},
 		update: function (e) {
+			console.log('update');
 			var el = e.target;
 			var $el = $(el);
 			var val = $el.val().trim();
@@ -192,8 +194,13 @@ jQuery(function ($) {
 			this.render();
 		},
 		destroy: function (e) {
-			this.todos.splice(this.indexFromEl(e.target), 1);
-			this.render();
+			const index = this.indexFromEl(e.target);
+			const id = this.todos[index].id;
+			deleteTodo(id)
+				.then(() => { 
+					this.todos.splice(index, 1);
+					this.render();
+				})
 		}
 	};
 
